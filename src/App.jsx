@@ -1,22 +1,22 @@
 import { Routes, Route } from "react-router-dom";
+import { Main, Login, Notes, Error } from "./pages";
+import { Header, Footer } from "./components";
 import "./App.css";
 
 export const App = () => {
     return (
         <>
-            <div>Запись к врачу</div>
-            <Routes>
-                <Route path="/" element={<div>Главная страница</div>} />
-                <Route path="/login" element={<div>Форма входа</div>} />
-                <Route
-                    path="/notes"
-                    element={<div>Запись на прием (для администратора)</div>}
-                />
-                <Route
-                    path="*"
-                    element={<div>ошибка. такой страницы не существует</div>}
-                />
-            </Routes>
+            <div>
+                <Header />
+                <Routes>
+                    <Route path="/" element={<Main />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/notes" element={<Notes />} />
+                    <Route path="*" element={<Error />} />
+                </Routes>
+            </div>
+
+            <Footer />
         </>
     );
 };
