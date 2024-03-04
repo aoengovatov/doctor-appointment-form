@@ -1,4 +1,11 @@
+import { useEffect } from "react";
+import noteService from "../../services/note.service";
+
 export const Notes = () => {
+    useEffect(() => {
+        noteService.getNotes().then((data) => console.log(data));
+    }, []);
+
     return (
         <>
             <h1>Запись к врачу</h1>

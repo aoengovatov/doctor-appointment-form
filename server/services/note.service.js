@@ -3,6 +3,7 @@ const Note = require("../models/Note");
 exports.getNotes = async () => {
     try {
         const data = Note.find();
+        return data;
     } catch (e) {
         throw Error("Ошибка получения Notes");
     }
