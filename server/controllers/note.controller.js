@@ -1,19 +1,22 @@
-const Note = require("../models/Note");
+const noteService = require("../services/note.service");
 
-exports.getNotes = async () => {
+exports.getNotes = async (req, res) => {
     try {
-        const data = Note.find();
+        const content = await noteService.getNotes();
+
+        return res.status(200).json(content);
     } catch (e) {
-        throw Error("Ошибка получения Notes");
+        return res.status(400).json(error);
     }
 };
 
-exports.addNote = async (payload) => {
+exports.addNote = async (req, res) => {
+    const newNote = req.body;
     try {
-        const newNote = await Note.create(payload);
+        const content = await noteService.addNote(newNote);
 
-        return newTodo;
+        return res.status(201).json(content);
     } catch (e) {
-        throw Error("Ошибка создания Note");
+        return res.status(400).json(error);
     }
 };
