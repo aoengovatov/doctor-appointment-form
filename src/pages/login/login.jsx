@@ -1,8 +1,47 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { Navigate } from "react-router-dom";
+import * as yup from "yup";
+
+const loginFormShema = yup.object().shape({
+    email: yup
+        .string()
+        .required("Заполните email")
+        .matches(/\w+$/, "Неверно заполнен email."),
+    password: yup
+        .string()
+        .required("Заполните пароль")
+        .matches(/^[0-9]+$/, "Неверно заполнен пароль. Допускаются только цифры")
+        .min(6, "Неверно заполнен пароль. Минимум 6 символов.")
+        .max(20, "Неверно заполнен пароль. Максимум 20 символов."),
+});
+
 export const Login = () => {
+    const {
+        register,
+        reset,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        defaultValues: {
+            email: "",
+            password: "",
+        },
+        resolver: yupResolver(loginFormShema),
+    });
+
+    const onSubmit = ({ email, password }) => {
+        console.log("Отправка формы", email, password);
+        <Navigate to="/notes" />;
+        reset();
+    };
+
+    const errorMessage = errors?.email?.message || errors?.password?.message;
+
     return (
         <div className="d-flex justify-content-center w-100 mt-5">
-            <form className="col-4">
-                <h1 className="h3 mb-3 fw-normal">Login</h1>
+            <form className="col-4" onSubmit={handleSubmit(onSubmit)}>
+                <h1 className="h3 mb-3 fw-normal">Авторизация</h1>
 
                 <div className="form-floating mb-1">
                     <input
@@ -10,8 +49,9 @@ export const Login = () => {
                         className="form-control"
                         id="floatingInput"
                         placeholder="name@example.com"
+                        {...register("email")}
                     />
-                    <label htmlFor="floatingInput">Email address</label>
+                    <label htmlFor="floatingInput">Email</label>
                 </div>
                 <div className="form-floating mb-2">
                     <input
@@ -19,13 +59,20 @@ export const Login = () => {
                         className="form-control"
                         id="floatingPassword"
                         placeholder="Password"
+                        {...register("password")}
                     />
-                    <label htmlFor="floatingPassword">Password</label>
+                    <label htmlFor="floatingPassword">Пароль</label>
                 </div>
 
-                <button className="btn btn-primary w-100 py-2" type="submit">
-                    Sign in
+                <button className="btn btn-primary w-100 py-2 mb-1" type="submit">
+                    Вход
                 </button>
+
+                {errorMessage && (
+                    <div className="text-center" style={{ color: "red" }}>
+                        {errorMessage}
+                    </div>
+                )}
             </form>
         </div>
     );
