@@ -40,9 +40,7 @@ export const Main = () => {
         resolver: yupResolver(problemFormShema),
     });
 
-    const onSubmit = async (note) => {
-        //console.log("Отправка формы", fio, phone, problem);
-        const { fio, phone, problem } = note;
+    const onSubmit = async ({ fio, phone, problem }) => {
         await noteService.addNote(fio, phone, problem).then((data) => {
             console.log(data);
             if (data) {
@@ -52,6 +50,7 @@ export const Main = () => {
                 alertSuccess = false;
             }
         });
+
         setAlertBlock(true);
         reset();
     };
