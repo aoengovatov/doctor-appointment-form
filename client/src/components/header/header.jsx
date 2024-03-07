@@ -1,5 +1,9 @@
+import { Link, useLocation } from "react-router-dom";
+
 export const Header = () => {
-    const currentUrl = window.location.pathname;
+    const location = useLocation();
+    const currentUrl = location.pathname;
+    console.log(currentUrl);
 
     const getActiveElem = (url) => {
         return url === currentUrl ? "nav-link active" : "nav-link";
@@ -9,19 +13,19 @@ export const Header = () => {
         <header className="d-flex  py-3">
             <ul className="nav nav-pills">
                 <li className="nav-item">
-                    <a href="/" className={getActiveElem("/")}>
+                    <Link to="/" className={getActiveElem("/")}>
                         Home
-                    </a>
+                    </Link>
                 </li>
                 <li className="nav-item">
-                    <a href="/login" className={getActiveElem("/login")}>
+                    <Link to="/login" className={getActiveElem("/login")}>
                         Login
-                    </a>
+                    </Link>
                 </li>
                 <li className="nav-item">
-                    <a href="/notes" className={getActiveElem("/notes")}>
+                    <Link to="/notes" className={getActiveElem("/notes")}>
                         Notes
-                    </a>
+                    </Link>
                 </li>
             </ul>
         </header>

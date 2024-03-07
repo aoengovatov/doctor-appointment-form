@@ -1,7 +1,10 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { Navigate, Link } from "react-router-dom";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import * as yup from "yup";
+import { Alert } from "../../components";
+import userService from "../../services/user.services";
 
 const loginFormShema = yup.object().shape({
     email: yup
@@ -23,7 +26,11 @@ const loginFormShema = yup.object().shape({
         .max(20, "Неверно заполнен пароль. Максимум 20 символов."),
 });
 
-export const Login = () => {
+export const Registry = () => {
+    const [alertMessage, setAlertMessage] = useState("");
+    let alertSuccess = true;
+    const [alertBlock, setAlertBlock] = useState(false);
+
     const {
         register,
         reset,
@@ -37,18 +44,28 @@ export const Login = () => {
         resolver: yupResolver(loginFormShema),
     });
 
-    const onSubmit = ({ email, password }) => {
-        console.log("Отправка формы", email, password);
-        <Navigate to="/notes" />;
+    const onSubmit = async ({ email, password }) => {
+        await userService.addUser(email, password).then((data) => {
+            console.log(data);
+            if (data) {
+                reset();
+                <Navigate to="/login" />;
+            } else {
+                alertSuccess = false;
+                setAlertMessage("Ошибка отправки сообщения. Попробуйте еще раз позже.");
+            }
+        });
+
+        setAlertBlock(true);
         reset();
     };
 
     const errorMessage = errors?.email?.message || errors?.password?.message;
 
     return (
-        <div className="d-flex justify-content-center w-100 mt-5">
+        <div className="d-flex flex-column justify-content-center align-items-center w-100 mt-5">
             <form className="col-4" onSubmit={handleSubmit(onSubmit)}>
-                <h1 className="h3 mb-3 fw-normal">Авторизация</h1>
+                <h1 className="h3 mb-3 fw-normal">Регистрация</h1>
 
                 <div className="form-floating mb-1">
                     <input
@@ -72,12 +89,8 @@ export const Login = () => {
                 </div>
 
                 <button className="btn btn-primary w-100 py-2 mb-1" type="submit">
-                    Вход
+                    Зарегистрироваться
                 </button>
-
-                <Link to="/registry" className="d-flex w-100 justify-content-center">
-                    регистрация
-                </Link>
 
                 {errorMessage && (
                     <div className="text-center" style={{ color: "red" }}>
@@ -85,6 +98,7 @@ export const Login = () => {
                     </div>
                 )}
             </form>
+            {alertBlock && <Alert success={alertSuccess}>{alertMessage}</Alert>}
         </div>
     );
 };

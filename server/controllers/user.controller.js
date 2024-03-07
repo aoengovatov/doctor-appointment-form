@@ -11,3 +11,15 @@ exports.getUser = async (req, res) => {
         return res.status(400).json(error);
     }
 };
+
+exports.addUser = async (req, res) => {
+    const newUser = req.body;
+
+    try {
+        const content = await userService.addUser(newUser);
+
+        return res.status(200).json(content);
+    } catch (e) {
+        return res.status(400).json(error);
+    }
+};

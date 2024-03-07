@@ -7,3 +7,11 @@ exports.getUser = async (email, password) => {
         throw Error("Ошибка. User не найден");
     }
 };
+
+exports.addUser = async (payload) => {
+    try {
+        const data = User.create(payload);
+    } catch (e) {
+        throw Error("Ошибка. User не найден");
+    }
+};
