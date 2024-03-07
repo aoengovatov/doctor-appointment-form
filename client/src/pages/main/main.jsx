@@ -3,12 +3,13 @@ import * as yup from "yup";
 import { useState } from "react";
 import { Alert } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
+import noteService from "../../services/note.service";
 
 const problemFormShema = yup.object().shape({
     fio: yup
         .string()
         .required("Заполните ФИО")
-        .matches(/[А Яа-я0]/g, "Неверно заполнено поле ФИО. Допускаются только буквы.")
+        .matches(/[А Яа-я ]/g, "Неверно заполнено поле ФИО. Допускаются только буквы.")
         .min(3, "Неверно заполнено поле ФИО. Минимум 3 символа.")
         .max(35, "Неверно заполнено поле ФИО. Максимум 35 символов."),
     phone: yup
@@ -17,18 +18,12 @@ const problemFormShema = yup.object().shape({
         .matches(/[0-9]/g, "Неверно заполнено поле телефон. Допускаются только цифры")
         .min(6, "Неверно заполнен телефон. Минимум 6 символов.")
         .max(20, "Неверно заполнен телефон. Максимум 20 символов."),
-    problem: yup
-        .string()
-        .matches(
-            /[А-Яа-я0-9.,-_ !:]/g,
-            "- Некорректное сообщение. Разрешенные символы:" +
-                "буквы (кирилица), знаки (.,-_!:)"
-        )
-        .max(200, "Неверно заполнен пароль. Максимум 200 символов."),
+    problem: yup.string().max(200, "Неверно заполнена проблема. Максимум 200 символов."),
 });
 
 export const Main = () => {
-    let alertMessage = "";
+    const [alertMessage, setAlertMessage] = useState("");
+    let alertSuccess = true;
     const [alertBlock, setAlertBlock] = useState(false);
 
     const {
@@ -45,9 +40,18 @@ export const Main = () => {
         resolver: yupResolver(problemFormShema),
     });
 
-    const onSubmit = ({ fio, phone, problem }) => {
-        console.log("Отправка формы", fio, phone, problem);
-        alertMessage = "Сообщение успешно отправлено!";
+    const onSubmit = async (note) => {
+        //console.log("Отправка формы", fio, phone, problem);
+        const { fio, phone, problem } = note;
+        await noteService.addNote(fio, phone, problem).then((data) => {
+            console.log(data);
+            if (data) {
+                setAlertMessage("Сообщение успешно отправлено!");
+            } else {
+                setAlertMessage("Ошибка отправки сообщения. Попробуйте еще раз позже.");
+                alertSuccess = false;
+            }
+        });
         setAlertBlock(true);
         reset();
     };
@@ -101,7 +105,7 @@ export const Main = () => {
                         </div>
                     )}
                 </form>
-                {alertBlock && <Alert>{alertMessage}</Alert>}
+                {alertBlock && <Alert success={alertSuccess}>{alertMessage}</Alert>}
             </div>
         </>
     );

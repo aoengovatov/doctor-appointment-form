@@ -12,11 +12,12 @@ exports.getNotes = async (req, res) => {
 
 exports.addNote = async (req, res) => {
     const newNote = req.body;
+    console.log(newNote);
     try {
         const content = await noteService.addNote(newNote);
 
         return res.status(201).json(content);
     } catch (e) {
-        return res.status(400).json(error);
+        return res.status(400).json(e);
     }
 };

@@ -13,7 +13,7 @@ exports.addNote = async (payload) => {
     try {
         const newNote = await Note.create(payload);
 
-        return newTodo;
+        return newNote;
     } catch (e) {
         throw Error("Ошибка создания Note");
     }
