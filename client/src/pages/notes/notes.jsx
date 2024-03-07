@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { dateFormatter } from "../../utils/utils";
 import noteService from "../../services/note.service";
 
 export const Notes = () => {
+    const [notes, setNotes] = useState([]);
+
     useEffect(() => {
-        noteService.getNotes().then((data) => console.log(data));
+        noteService.getNotes().then((data) => setNotes(data));
     }, []);
 
     return (
@@ -19,12 +22,14 @@ export const Notes = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">20.01.2024</th>
-                        <td>Иванов Иван Иванович</td>
-                        <td>89547855547</td>
-                        <td>головная боль</td>
-                    </tr>
+                    {notes.map(({ _id, fio, phone, problem, createdAt }) => (
+                        <tr key={_id}>
+                            <th scope="row">{dateFormatter(createdAt)}</th>
+                            <td>{fio}</td>
+                            <td>{phone}</td>
+                            <td>{problem}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </>

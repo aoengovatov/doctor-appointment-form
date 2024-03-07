@@ -2,7 +2,7 @@ const Note = require("../models/Note");
 
 exports.getNotes = async () => {
     try {
-        const data = Note.find();
+        const data = Note.find().sort("createdAt");
         return data;
     } catch (e) {
         throw Error("Ошибка получения Notes");
