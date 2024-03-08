@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 export const Header = () => {
     const location = useLocation();
     const currentUrl = location.pathname;
-    console.log(currentUrl);
 
     const getActiveElem = (url) => {
         return url === currentUrl ? "nav-link active" : "nav-link";

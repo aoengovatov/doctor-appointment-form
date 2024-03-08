@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { Alert } from "../../components";
 import userService from "../../services/user.services";
@@ -28,8 +28,10 @@ const loginFormShema = yup.object().shape({
 
 export const Registry = () => {
     const [alertMessage, setAlertMessage] = useState("");
-    let alertSuccess = true;
+    const [alertSuccess, setAlertSuccess] = useState(true);
     const [alertBlock, setAlertBlock] = useState(false);
+
+    const navigate = useNavigate();
 
     const {
         register,
@@ -46,18 +48,16 @@ export const Registry = () => {
 
     const onSubmit = async ({ email, password }) => {
         await userService.addUser(email, password).then((data) => {
-            console.log(data);
-            if (data) {
+            if (data?.email) {
                 reset();
-                <Navigate to="/login" />;
+                navigate("/login");
             } else {
-                alertSuccess = false;
-                setAlertMessage("Ошибка отправки сообщения. Попробуйте еще раз позже.");
+                setAlertSuccess(false);
+                setAlertMessage(data);
+                setAlertBlock(true);
+                reset();
             }
         });
-
-        setAlertBlock(true);
-        reset();
     };
 
     const errorMessage = errors?.email?.message || errors?.password?.message;

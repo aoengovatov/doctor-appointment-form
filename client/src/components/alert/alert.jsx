@@ -1,5 +1,5 @@
 export const Alert = ({ success = true, children }) => {
-    const successStyle = success ? "success" : "dager";
+    const successStyle = success ? "success" : "danger";
     const style = `alert alert-${successStyle} d-flex align-items-center col-4`;
 
     return (
