@@ -1,7 +1,8 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { Navigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import * as yup from "yup";
+import userService from "../../services/user.services";
 
 const loginFormShema = yup.object().shape({
     email: yup
@@ -24,6 +25,8 @@ const loginFormShema = yup.object().shape({
 });
 
 export const Login = () => {
+    const navigate = useNavigate();
+
     const {
         register,
         reset,
@@ -37,10 +40,15 @@ export const Login = () => {
         resolver: yupResolver(loginFormShema),
     });
 
-    const onSubmit = ({ email, password }) => {
+    const onSubmit = async ({ email, password }) => {
         console.log("Отправка формы", email, password);
-        <Navigate to="/notes" />;
-        reset();
+        await userService.loginUser(email, password).then((data) => {
+            if (data) {
+                sessionStorage.setItem("user", data);
+                reset();
+                navigate("/notes");
+            }
+        });
     };
 
     const errorMessage = errors?.email?.message || errors?.password?.message;

@@ -7,8 +7,12 @@ const http = axios.create({
 });
 
 const noteService = {
-    async getNotes() {
-        const { data } = await http.get(noteEndpoint);
+    async getNotes(token) {
+        const { data } = await http.get(noteEndpoint, {
+            headers: {
+                user: token,
+            },
+        });
         return data;
     },
 

@@ -1,11 +1,15 @@
 const Note = require("../models/Note");
+const jwt = require("jsonwebtoken");
+const config = require("../config/default.json");
 
-exports.getNotes = async () => {
+exports.getNotes = async (token) => {
     try {
-        const data = Note.find().sort("createdAt");
+        jwt.verify(token, config.JWT_SECRET);
+        const data = await Note.find().sort("createdAt");
+
         return data;
     } catch (e) {
-        throw Error("Ошибка получения Notes");
+        throw Error("Ошибка получения Notes. У Вас недостаточно прав.");
     }
 };
 

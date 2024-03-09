@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const config = require("config");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const noteRoute = require("./routes/note.routes");
 const userRoute = require("./routes/user.routes");
 
@@ -12,6 +13,7 @@ app.use(
     })
 );
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/notes", noteRoute);
 app.use("/users", userRoute);

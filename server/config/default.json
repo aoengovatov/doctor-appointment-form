@@ -1,5 +1,6 @@
 {
     "port": 4000,
     "baseUrl": "http://localhost",
-    "mongoUri": "mongodb+srv://aoengovatov:aoengovatovadmin@cluster0.ndz6eui.mongodb.net/doctor?retryWrites=true&w=majority&appName=Cluster0"
+    "mongoUri": "mongodb+srv://aoengovatov:aoengovatovadmin@cluster0.ndz6eui.mongodb.net/doctor?retryWrites=true&w=majority&appName=Cluster0",
+    "JWT_SECRET": "cookie-key"
 }

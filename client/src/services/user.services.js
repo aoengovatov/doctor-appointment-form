@@ -7,8 +7,8 @@ const http = axios.create({
 });
 
 const userService = {
-    async getUsers() {
-        const { data } = await http.get(userEndpoint);
+    async loginUser(email, password) {
+        const { data } = await http.post(userEndpoint + "login", { email, password });
         return data;
     },
 

@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import { dateFormatter } from "../../utils/utils";
+import { Alert } from "../../components";
 import noteService from "../../services/note.service";
 
 export const Notes = () => {
     const [notes, setNotes] = useState([]);
+    const token = sessionStorage.getItem("user");
 
     useEffect(() => {
-        noteService.getNotes().then((data) => setNotes(data));
-    }, []);
+        noteService.getNotes(token).then((data) => {
+            if (data) {
+                setNotes(data);
+            }
+        });
+    }, [token]);
+    console.log(notes);
 
     return (
         <>
@@ -32,6 +39,9 @@ export const Notes = () => {
                     ))}
                 </tbody>
             </table>
+            {notes.length === 0 && (
+                <Alert success={false}>Ошибка загрузки. У Вас недостаточно прав.</Alert>
+            )}
         </>
     );
 };
